@@ -5,8 +5,8 @@ services:
     image: mysql:8.0
     container_name: mysql1
     hostname: mysql1
-    ports:
-      - "3306:3306"
+    # ports:
+    #   - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: appuser
@@ -15,6 +15,7 @@ services:
     volumes:
       - ./mysql/mysql1.cnf:/etc/mysql/conf.d/custom.cnf:ro
     command: --server-id=1 --gtid-mode=ON --enforce-gtid-consistency=true --binlog_transaction_dependency_tracking=WRITESET
+    restart: always
 
   mysql2:
     image: mysql:8.0
@@ -28,6 +29,7 @@ services:
     volumes:
       - ./mysql/mysql2.cnf:/etc/mysql/conf.d/custom.cnf:ro
     command: --server-id=2 --gtid-mode=ON --enforce-gtid-consistency=true --binlog_transaction_dependency_tracking=WRITESET
+    restart: always
 
   mysql3:
     image: mysql:8.0
@@ -41,6 +43,7 @@ services:
     volumes:
       - ./mysql/mysql3.cnf:/etc/mysql/conf.d/custom.cnf:ro
     command: --server-id=3 --gtid-mode=ON --enforce-gtid-consistency=true --binlog_transaction_dependency_tracking=WRITESET
+    restart: always
 
   mysql-shell:
     build: ./shell
@@ -51,10 +54,14 @@ services:
       - mysql3
     volumes:
       - ./shell/init-cluster.js:/init-cluster.js
+    # entrypoint: >
+    #   bash -c "
+    #   sleep 30 &&
+    #   mysqlsh --uri root:root@mysql1:3306 --file /init-cluster.js
+    #   "
     entrypoint: >
       bash -c "
-      sleep 60 &&
-      mysqlsh --uri root:root@mysql1:3306 --file /init-cluster.js
+      tail -f /dev/null
       "
 
   mysql-router:
@@ -69,14 +76,18 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
       MYSQL_HOST: mysql1
+  #   entrypoint: >
+  #     bash -c "
+  #       sleep 120 &&
+  #       mysqlrouter --bootstrap root:root@mysql1:3306 --directory /usr/local/mysqlrouter --user=mysqlrouter --force &&
+  #       mysqlrouter -c /usr/local/mysqlrouter/mysqlrouter.conf
+  #     "
     entrypoint: >
       bash -c "
-        sleep 120 &&
-        mysqlrouter --bootstrap root:root@mysql1:3306 --directory /usr/local/mysqlrouter --user=mysqlrouter --force &&
-        mysqlrouter -c /usr/local/mysqlrouter/mysqlrouter.conf
+      tail -f /dev/null
       "
-    volumes:
-    - ./router-data:/usr/local/mysqlrouter
+    # volumes:
+    # - ./router-data:/usr/local/mysqlrouter
     ports:
       - "6446:6446"
 
@@ -91,3 +102,7 @@ services:
       DB_PASS: root
       DB_NAME: appdb
 
+    entrypoint: >
+      bash -c "
+      tail -f /dev/null
+      "
