@@ -13,6 +13,6 @@ binlog_transaction_dependency_tracking=WRITESET
 
 loose-group_replication_group_name="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
 loose-group_replication_start_on_boot=off
-loose-group_replication_local_address="mysql1:33061"
+loose-group_replication_local_address="mysql3:33061"
 loose-group_replication_group_seeds="mysql1:33061,mysql2:33061,mysql3:33061"
 loose-group_replication_bootstrap_group=off
