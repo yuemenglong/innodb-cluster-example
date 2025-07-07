@@ -46,7 +46,8 @@ services:
     restart: always
 
   mysql-shell:
-    build: ./shell
+    # build: ./shell
+    image: yml/mysql-shell
     container_name: mysql-shell
     depends_on:
       - mysql1
@@ -71,7 +72,7 @@ services:
       - mysql1
       - mysql2
       - mysql3
-      - mysql-shell
+      # - mysql-shell
     environment:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
@@ -91,18 +92,18 @@ services:
     ports:
       - "6446:6446"
 
-  app:
-    build: ./app
-    depends_on:
-      - mysql-router
-    environment:
-      DB_HOST: mysql-router
-      DB_PORT: 6446
-      DB_USER: root
-      DB_PASS: root
-      DB_NAME: appdb
+  # app:
+  #   build: ./app
+  #   depends_on:
+  #     - mysql-router
+  #   environment:
+  #     DB_HOST: mysql-router
+  #     DB_PORT: 6446
+  #     DB_USER: root
+  #     DB_PASS: root
+  #     DB_NAME: appdb
 
-    entrypoint: >
-      bash -c "
-      tail -f /dev/null
-      "
+  #   entrypoint: >
+  #     bash -c "
+  #     tail -f /dev/null
+  #     "
