@@ -1,5 +1,7 @@
 [mysqld]
 server_id=1
+report_host=172.28.41.59
+report_port=3316
 
 gtid_mode=ON
 enforce_gtid_consistency=ON

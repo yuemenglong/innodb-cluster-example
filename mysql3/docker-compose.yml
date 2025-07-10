@@ -4,9 +4,9 @@ services:
   mysql3:
     image: mysql:8.0
     container_name: mysql3
-    hostname: mysql3
+    hostname: 172.28.41.59
     ports:
-      - "3336:3306"
+      - "3336:3336"
       - "33360:33060"
       - "33361:33061"
     environment:
@@ -16,7 +16,14 @@ services:
       MYSQL_DATABASE: appdb
     volumes:
       - ./mysql3.cnf:/etc/mysql/conf.d/custom.cnf:ro
-    command: --server-id=3 --gtid-mode=ON --enforce-gtid-consistency=true --binlog_transaction_dependency_tracking=WRITESET
+    command: >
+      --port=3336
+      --server-id=3
+      --gtid-mode=ON
+      --enforce-gtid-consistency=true
+      --binlog_transaction_dependency_tracking=WRITESET
+      --report_host=172.28.41.59
+      --report_port=3336
     restart: always
     extra_hosts:
       - "mysql1:172.28.41.59"

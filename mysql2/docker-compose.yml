@@ -4,9 +4,9 @@ services:
   mysql2:
     image: mysql:8.0
     container_name: mysql2
-    hostname: mysql2
+    hostname: 172.28.41.59
     ports:
-      - "3326:3306"
+      - "3326:3326"
       - "33260:33060"
       - "33261:33061"
     environment:
@@ -16,7 +16,14 @@ services:
       MYSQL_DATABASE: appdb
     volumes:
       - ./mysql2.cnf:/etc/mysql/conf.d/custom.cnf:ro
-    command: --server-id=2 --gtid-mode=ON --enforce-gtid-consistency=true --binlog_transaction_dependency_tracking=WRITESET
+    command: >
+      --port=3326
+      --server-id=2
+      --gtid-mode=ON
+      --enforce-gtid-consistency=true
+      --binlog_transaction_dependency_tracking=WRITESET
+      --report_host=172.28.41.59
+      --report_port=3326
     restart: always
     extra_hosts:
       - "mysql1:172.28.41.59"
