@@ -19,11 +19,22 @@ services:
     command: >
       --port=3316
       --server-id=1
-      --gtid-mode=ON
-      --enforce-gtid-consistency=true
-      --binlog_transaction_dependency_tracking=WRITESET
       --report_host=172.28.41.59
       --report_port=3316
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --master-info-repository=TABLE
+      --relay-log-info-repository=TABLE
+      --binlog-checksum=NONE
+      --log-slave-updates=ON
+      --log-bin=binlog
+      --transaction-write-set-extraction=XXHASH64
+      --binlog-transaction-dependency-tracking=WRITESET
+      --loose-group-replication-group-name="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+      --loose-group-replication-start-on-boot=off
+      --loose-group-replication-local-address="172.28.41.59:33161"
+      --loose-group-replication-group-seeds="172.28.41.59:33161,172.28.41.59:33261,172.28.41.59:33361"
+      --loose-group-replication-bootstrap-group=off
     restart: always
     extra_hosts:
       - "mysql1:172.28.41.59"
