@@ -32,28 +32,29 @@ print("⏳ 脚本开始：正在检查或创建InnoDB集群 'myCluster'...");
 
 // mysqlsh
 // \connect root:root@172.28.41.59:3316
-dba.configureInstance('root@172.28.41.59:3316', { password: 'root', clusterAdmin: 'clusteradmin',
-      clusterAdminPassword: 'password' });
-dba.configureInstance('root@172.28.41.59:3326', { password: 'root', clusterAdmin: 'clusteradmin',
-      clusterAdminPassword: 'password' });
-dba.configureInstance('root@172.28.41.59:3336', { password: 'root', clusterAdmin: 'clusteradmin',
-      clusterAdminPassword: 'password' });
+  dba.configureInstance('root@172.28.41.59:3316', { password: 'root', clusterAdmin: 'clusteradmin',
+  clusterAdminPassword: 'password' });
+  dba.configureInstance('root@172.28.41.59:3326', { password: 'root', clusterAdmin: 'clusteradmin',
+  clusterAdminPassword: 'password' });
+  dba.configureInstance('root@172.28.41.59:3336', { password: 'root', clusterAdmin: 'clusteradmin',
+  clusterAdminPassword: 'password' });
 
-const newCluster = dba.createCluster('myCluster', {
-    localAddress: '0.0.0.0:33161'
-});
+// docker inspect mysql1 | grep IPAddress
+  const newCluster = dba.createCluster('myCluster', {
+    localAddress: '0.0.0.0:3316'
+  });
 
-newCluster.addInstance('root@172.28.41.59:3326', {
+  newCluster.addInstance('root@172.28.41.59:3326', {
     password: 'root',
     recoveryMethod: 'clone',
-    localAddress: '0.0.0.0:33261'
-});
+    localAddress: 'mysql2:3326'
+  });
 
-newCluster.addInstance('root@172.28.41.59:3336', {
+  newCluster.addInstance('root@172.28.41.59:3336', {
     password: 'root',
     recoveryMethod: 'clone',
-    localAddress: '0.0.0.0:33361'
-});
+    localAddress: '0.0.0.0:3336'
+  });
 
                 
         // dba.configureInstance('root@172.28.41.59:3316', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
@@ -62,6 +63,16 @@ newCluster.addInstance('root@172.28.41.59:3336', {
         // const newCluster = dba.createCluster('myCluster');
         // newCluster.addInstance('root@172.28.41.59:3326', { password: 'root', recoveryMethod: 'clone' });
         // newCluster.addInstance('root@172.28.41.59:3336', { password: 'root', recoveryMethod: 'clone' });
+        
+
+// mysqlsh
+// \connect root:root@mysql1:3316
+        dba.configureInstance('root@mysql1:3316', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
+        dba.configureInstance('root@mysql2:3326', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
+        dba.configureInstance('root@mysql3:3336', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
+        const newCluster = dba.createCluster('myCluster');
+        newCluster.addInstance('root@mysql2:3326', { password: 'root', recoveryMethod: 'clone' });
+        newCluster.addInstance('root@mysql3:3336', { password: 'root', recoveryMethod: 'clone' });
         
 
 

@@ -4,7 +4,7 @@ services:
   mysql1:
     image: mysql:8.0
     container_name: mysql1
-    hostname: 172.28.41.59
+    hostname: mysql1
     ports:
       - "3316:3316"
       - "33160:33060"
@@ -14,12 +14,12 @@ services:
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
       MYSQL_DATABASE: appdb
-    # volumes:
-    #   - ./mysql1.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    volumes:
+      - ./mysql1.cnf:/etc/mysql/conf.d/custom.cnf:ro
     command: >
       --port=3316
       --server-id=1
-      --report_host=172.28.41.59
+      --report_host=mysql1
       --report_port=3316
       --gtid-mode=ON
       --enforce-gtid-consistency=ON
@@ -32,8 +32,8 @@ services:
       --binlog-transaction-dependency-tracking=WRITESET
       --loose-group-replication-group-name="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
       --loose-group-replication-start-on-boot=off
-      --loose-group-replication-local-address="0.0.0.0:33161"
-      --loose-group-replication-group-seeds="172.28.41.59:33161,172.28.41.59:33261,172.28.41.59:33361"
+      --loose-group-replication-local-address="mysql1:33161"
+      --loose-group-replication-group-seeds="mysql1:33161,mysql2:33261,mysql3:33361"
       --loose-group-replication-bootstrap-group=off
     restart: always
     extra_hosts:

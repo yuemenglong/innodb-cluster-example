@@ -1,6 +1,6 @@
 [mysqld]
 server_id=2
-report_host=172.28.41.59
+report_host=mysql2
 report_port=3326
 
 gtid_mode=ON
@@ -15,6 +15,6 @@ binlog_transaction_dependency_tracking=WRITESET
 
 loose-group_replication_group_name="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
 loose-group_replication_start_on_boot=off
-loose-group_replication_local_address="172.28.41.59:33261"
-loose-group_replication_group_seeds="172.28.41.59:33161,172.28.41.59:33261,172.28.41.59:33361"
+loose-group_replication_local_address="mysql2:33261"
+loose-group_replication_group_seeds="mysql1:33161,mysql2:33261,mysql3:33361"
 loose-group_replication_bootstrap_group=off
