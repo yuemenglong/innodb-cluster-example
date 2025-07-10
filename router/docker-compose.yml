@@ -42,6 +42,9 @@ services:
     # - ./router-data:/usr/local/mysqlrouter
     ports:
       - "6446:6446"
+      - "6447:6447"
+      - "6448:6448"
+      - "6449:6449"
     extra_hosts:
       - "mysql1:172.28.41.59"
       - "mysql2:172.28.41.59"
