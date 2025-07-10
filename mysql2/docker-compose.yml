@@ -14,8 +14,8 @@ services:
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
       MYSQL_DATABASE: appdb
-    volumes:
-      - ./mysql2.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    # volumes:
+    #   - ./mysql2.cnf:/etc/mysql/conf.d/custom.cnf:ro
     command: >
       --port=3326
       --server-id=2
@@ -32,7 +32,7 @@ services:
       --binlog-transaction-dependency-tracking=WRITESET
       --loose-group-replication-group-name="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
       --loose-group-replication-start-on-boot=off
-      --loose-group-replication-local-address="172.28.41.59:33261"
+      --loose-group-replication-local-address="0.0.0.0:33261"
       --loose-group-replication-group-seeds="172.28.41.59:33161,172.28.41.59:33261,172.28.41.59:33361"
       --loose-group-replication-bootstrap-group=off
     restart: always
