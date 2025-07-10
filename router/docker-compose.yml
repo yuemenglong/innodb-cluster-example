@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mysql-shell:
+    # build: ../shell
+    image: yml/mysql-shell
+    container_name: mysql-shell
+    volumes:
+      - ../shell/init-cluster.js:/init-cluster.js
+    # entrypoint: >
+    #   bash -c "
+    #   sleep 30 &&
+    #   mysqlsh --uri root:root@mysql1:3306 --file /init-cluster.js
+    #   "
+    entrypoint: >
+      bash -c "
+      tail -f /dev/null
+      "
+    extra_hosts:
+      - "mysql1:172.28.41.59"
+      - "mysql2:172.28.41.59"
+      - "mysql3:172.28.41.59"
+
+  mysql-router:
+    image: mysql/mysql-router:8.0
+    container_name: mysql-router
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      # MYSQL_HOST: mysql1
+#   entrypoint: >
+#     bash -c "
+#       sleep 120 &&
+#       mysqlrouter --bootstrap root:root@mysql1:3306 --directory /usr/local/mysqlrouter --user=mysqlrouter --force &&
+#       mysqlrouter -c /usr/local/mysqlrouter/mysqlrouter.conf
+#     "
+    entrypoint: >
+      bash -c "
+      tail -f /dev/null
+      "
+    # volumes:
+    # - ./router-data:/usr/local/mysqlrouter
+    ports:
+      - "6446:6446"
+    extra_hosts:
+      - "mysql1:172.28.41.59"
+      - "mysql2:172.28.41.59"
+      - "mysql3:172.28.41.59"

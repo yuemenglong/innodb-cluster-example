@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  mysql2:
+    image: mysql:8.0
+    container_name: mysql2
+    hostname: mysql2
+    ports:
+      - "3326:3306"
+      - "33260:33060"
+      - "33261:33061"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+      MYSQL_DATABASE: appdb
+    volumes:
+      - ./mysql2.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    command: --server-id=2 --gtid-mode=ON --enforce-gtid-consistency=true --binlog_transaction_dependency_tracking=WRITESET
+    restart: always
+    extra_hosts:
+      - "mysql1:172.28.41.59"
+      - "mysql2:172.28.41.59"
+      - "mysql3:172.28.41.59"
+
+  mysql2-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysql2-exporter
+    depends_on:
+      - mysql2
+    environment:
+      DATA_SOURCE_NAME: "root:root@tcp(mysql2:3306)/"
+    command:
+      - --config.my-cnf=/etc/mysql/.my.cnf
+      - --mysqld.address=mysql2:3306
+      - --mysqld.username=root
+    volumes:
+      - ../mysql-exporter-config/.my.cnf:/etc/mysql/.my.cnf:ro
+    ports:
+      - "9124:9104"
+    restart: always
+

@@ -1,5 +1,6 @@
 // 文件: shell/init-cluster.js
 // \connect root:root@mysql1:3306
+// \connect root:root@172.28.41.59:3316
 // docker exec -it -u root mysql-router bash
 // mysqlrouter --bootstrap root:root@mysql1:3306 --directory /usr/local/mysqlrouter --user=mysqlrouter --force
 // chown -R mysqlrouter:mysqlrouter /usr/local/mysqlrouter/
@@ -28,6 +29,15 @@ print("⏳ 脚本开始：正在检查或创建InnoDB集群 'myCluster'...");
 //     // 步骤 3: 如果 getCluster() 抛出异常，我们判断是否是因为集群不存在。
 //     if (e.message.includes("Cluster 'myCluster' does not exist")) {
 //         print("🟡 未找到集群 'myCluster'。开始执行首次创建流程...");
+                
+        dba.configureInstance('root@172.28.41.59:3316', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
+        dba.configureInstance('root@172.28.41.59:3326', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
+        dba.configureInstance('root@172.28.41.59:3336', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
+        const newCluster = dba.createCluster('myCluster');
+        newCluster.addInstance('root@172.28.41.59:3326', { password: 'root', recoveryMethod: 'clone' });
+        newCluster.addInstance('root@172.28.41.59:3336', { password: 'root', recoveryMethod: 'clone' });
+        
+
 
         // 步骤 3a: 依次配置每个实例
         print("  -> 正在配置 mysql1...");
@@ -38,7 +48,7 @@ print("⏳ 脚本开始：正在检查或创建InnoDB集群 'myCluster'...");
         
         print("  -> 正在配置 mysql3...");
         dba.configureInstance('root@mysql3:3306', { password: 'root', clusterAdmin: 'clusteradmin', clusterAdminPassword: 'password' });
-        
+
         // 步骤 3b: 创建集群，并将 mysql1 作为种子节点
         print("  -> 正在创建集群...");
         const newCluster = dba.createCluster('myCluster');
