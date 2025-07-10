@@ -107,3 +107,54 @@ services:
   #     bash -c "
   #     tail -f /dev/null
   #     "
+
+  mysql1-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysql1-exporter
+    depends_on:
+      - mysql1
+    environment:
+      DATA_SOURCE_NAME: "root:root@tcp(mysql1:3306)/"
+    command:
+      - --config.my-cnf=/etc/mysql/.my.cnf
+      - --mysqld.address=mysql1:3306
+      - --mysqld.username=root
+    volumes:
+      - ./mysql-exporter-config/.my.cnf:/etc/mysql/.my.cnf:ro
+    ports:
+      - "9104:9104"
+    restart: always
+
+  mysql2-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysql2-exporter
+    depends_on:
+      - mysql2
+    environment:
+      DATA_SOURCE_NAME: "root:root@tcp(mysql2:3306)/"
+    command:
+      - --config.my-cnf=/etc/mysql/.my.cnf
+      - --mysqld.address=mysql2:3306
+      - --mysqld.username=root
+    volumes:
+      - ./mysql-exporter-config/.my.cnf:/etc/mysql/.my.cnf:ro
+    ports:
+      - "9105:9104"
+    restart: always
+
+  mysql3-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysql3-exporter
+    depends_on:
+      - mysql3
+    environment:
+      DATA_SOURCE_NAME: "root:root@tcp(mysql3:3306)/"
+    command:
+      - --config.my-cnf=/etc/mysql/.my.cnf
+      - --mysqld.address=mysql3:3306
+      - --mysqld.username=root
+    volumes:
+      - ./mysql-exporter-config/.my.cnf:/etc/mysql/.my.cnf:ro
+    ports:
+      - "9106:9104"
+    restart: always
